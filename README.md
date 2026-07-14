@@ -67,6 +67,8 @@ Alongside every ideal mathematical result, the engine separately computes the ne
 ### Live Formula Generation
 Every output parameter is returned together with its symbolic LaTeX formula, plain-text formula, the fully substituted equation with real numeric values, the final result, and its list of dependent variables — allowing the front end to display the complete step-by-step derivation of any number.
 
+![formula](PIC/5.png)
+
 ---
 
 ## 🖥️ Web Interface Features
