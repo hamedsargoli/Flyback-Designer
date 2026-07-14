@@ -1,5 +1,15 @@
-/* Custom CSS styling stylesheet for Flyback Design Web UI */
+/* ==============================================================================
+   Flyback Transformer Design Suite
+   File     : custom.css — Global UI Styling & Component Styles
+   Version  : 1.0
+   Author   : Hamed Sargoli
+   Date     : 2026-07-14
+   Developed with AI collaboration
+   ============================================================================== */
 
+/* ------------------------------------------------------------------------------
+   SECTION: Base page & typography
+   ------------------------------------------------------------------------------ */
 body {
 background-color: #0b0f19;
 font-family: 'Vazirmatn', sans-serif;
@@ -9,6 +19,9 @@ font-family: 'Vazirmatn', sans-serif;
 font-family: 'Fira Code', monospace;
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: Input tooltips
+   ------------------------------------------------------------------------------ */
 /* Tooltip structures for inputs description */
 .tooltip-container {
 position: relative;
@@ -58,6 +71,9 @@ opacity: 1;
 transform: translateX(-50%) translateY(0);
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: Form inputs & tab navigation controls
+   ------------------------------------------------------------------------------ */
 /* Form inputs & interactive components */
 .tab-btn {
 color: #94a3b8;
@@ -85,6 +101,9 @@ box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
 outline: none;
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: Custom scrollbars
+   ------------------------------------------------------------------------------ */
 /* Custom scrollbars styling */
 ::-webkit-scrollbar {
 width: 8px;
@@ -109,6 +128,9 @@ code::-webkit-scrollbar-track {
 background: transparent;
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: Modal transitions (formula modal fade/slide)
+   ------------------------------------------------------------------------------ */
 /* Advanced Modal transitions (Smooth sliding & fading) */
 .modal-backdrop {
 animation: fadeIn 0.25s ease-out forwards;
@@ -134,6 +156,9 @@ transform: translateY(0) scale(1);
 }
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: KaTeX engineering formula rendering
+   ------------------------------------------------------------------------------ */
 /* Mathematical formulas alignment rules (Left to Right) */
 .ltr-formula {
 direction: ltr !important;
@@ -164,6 +189,9 @@ font-size: 1.5rem; /* Even larger font size on desktop screens */
 }
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: Input highlight pulse animation (jump-to-field feedback)
+   ------------------------------------------------------------------------------ */
 /* Highly-optimized pulsating border-glow keyframe animation for responsive debugging visualization */
 @keyframes turquoisePulse {
 0%, 100% {
@@ -183,6 +211,9 @@ border-color: rgba(6, 182, 212, 0.8) !important;
 transition: all 0.3s ease;
 }
 
+/* ------------------------------------------------------------------------------
+   SECTION: Live schematic value chips (data-bound spec card pulse)
+   ------------------------------------------------------------------------------ */
 /* Data-bound schematic value chips (Lp, turns ratio, Vds stress, flux
 density) on the circuit SVG. Re-triggered from JS on every fresh
 calculation result to give the schematic a "live" feel. */

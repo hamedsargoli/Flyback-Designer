@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+# ==============================================================================
+#  Flyback Transformer Design Suite
+#  File     : app.py — Flask Web Server & API Layer
+#  Version  : 1.0
+#  Author   : Hamed Sargoli
+#  Date     : 2026-07-14
+#  Developed with AI collaboration
+# ==============================================================================
 """
 Flyback Transformer Engineering Suite - Flask Server
 Handles routing and modular API calculations for offline AC-DC, DC-DC, and battery chargers.
@@ -12,7 +20,10 @@ import threading
 
 app = Flask(__name__)
 
+# ------------------------------------------------------------------------------
+# Base path resolution
 # پیدا کردن مسیر ریشه پروژه (سازگار با اجرای معمولی و فایل EXE ساخته شده با PyInstaller)
+# ------------------------------------------------------------------------------
 if getattr(sys, 'frozen', False):
     # اگر برنامه به صورت فایل اجرایی درآمده باشد، فایل‌ها در این پوشه موقت اکسترکت می‌شوند
     BASE_DIR = sys._MEIPASS
@@ -23,7 +34,10 @@ else:
 # تنظیم پوشه قالب‌ها به ریشه اصلی
 app.template_folder = BASE_DIR
 
+# ------------------------------------------------------------------------------
+# Static file routes (CSS / JS)
 # تعریف مسیرهای سفارشی برای پیدا کردن و لود کردن فایل‌های استاتیک
+# ------------------------------------------------------------------------------
 @app.route('/static/css/custom.css')
 @app.route('/static/custom.css')
 @app.route('/custom.css')
@@ -55,11 +69,17 @@ def serve_js():
 # بارگذاری موتور محاسباتی ترانسفورماتور
 from flyback_engine import calculate_flyback
 
+# ------------------------------------------------------------------------------
+# Page routes
+# ------------------------------------------------------------------------------
 @app.route('/')
 def index():
     """Renders the main unified calculator page."""
     return render_template('index.html')
 
+# ------------------------------------------------------------------------------
+# API: main calculation endpoint
+# ------------------------------------------------------------------------------
 @app.route('/api/calculate', methods=['POST'])
 def api_calculate():
     """
@@ -85,6 +105,9 @@ def api_calculate():
         error_msg = f"Calculation error: {str(e)} in {fname} at line {exc_tb.tb_lineno}"
         return jsonify({'success': False, 'error': error_msg}), 500
 
+# ------------------------------------------------------------------------------
+# API: local server shutdown
+# ------------------------------------------------------------------------------
 @app.route('/api/shutdown', methods=['POST'])
 def shutdown():
     """Gracefully shuts down the local server when the browser is closed."""
@@ -92,10 +115,16 @@ def shutdown():
     threading.Timer(0.5, lambda: os._exit(0)).start()
     return jsonify({'success': True, 'message': 'Server is shutting down...'})
 
+# ------------------------------------------------------------------------------
+# Local browser launcher
+# ------------------------------------------------------------------------------
 def open_browser():
     """Opens the default web browser to the local server address."""
     webbrowser.open_new("http://127.0.0.1:5000")
 
+# ------------------------------------------------------------------------------
+# Entry point
+# ------------------------------------------------------------------------------
 if __name__ == '__main__':
     print("=" * 60)
     print(" Running Flyback Design Suite on http://127.0.0.1:5000")

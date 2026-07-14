@@ -1,9 +1,11 @@
 <!--
 ==============================================================================
-Project: Flyback Transformer Design Suite UI - Main HTML Portal
-Version: 5.9
-AI Instruction: Whenever any AI model edits, refactors, or updates this file,
-                please increment the version number above by exactly +0.1.
+ Flyback Transformer Design Suite
+ File     : index.html — Main HTML Portal / UI Structure
+ Version  : 1.0
+ Author   : Hamed Sargoli
+ Date     : 2026-07-14
+ Developed with AI collaboration
 ==============================================================================
 -->
 <!DOCTYPE html>
@@ -23,6 +25,9 @@ AI Instruction: Whenever any AI model edits, refactors, or updates this file,
 </head>
 <body class="text-slate-200 min-h-screen">
 
+    <!-- ==========================================================================
+         SECTION: Top header — branding, version badge, and topology tab switcher
+         ========================================================================== -->
     <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -32,7 +37,7 @@ AI Instruction: Whenever any AI model edits, refactors, or updates this file,
                 <div>
                     <h1 class="text-xl font-extrabold text-white flex items-center gap-2">
                         پروژه محاسباتی ماژولار ترانس فلای‌بک
-                        <span class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full font-medium">نسخه ۵.۸</span>
+                        <span class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full font-medium">نسخه ۱.۰</span>
                     </h1>
                     <p class="text-xs text-slate-400 font-medium">اتصال وب متصل به هسته فیزیکی پایتون با مانیتورینگ زنده جریان و مدار اسنابر</p>
                 </div>
@@ -56,7 +61,9 @@ AI Instruction: Whenever any AI model edits, refactors, or updates this file,
     <main class="max-w-7xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- Left inputs panel -->
+            <!-- ==================================================================
+                 SECTION: Left panel — dynamic, grouped design input form
+                 ================================================================== -->
             <div class="lg:col-span-5 space-y-6">
                 <div id="tab-intro" class="p-4 rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xs leading-relaxed text-right">
                     <!-- Dynamic introduction text injected here -->
@@ -69,6 +76,10 @@ AI Instruction: Whenever any AI model edits, refactors, or updates this file,
                         پارامترهای فنی ورودی
                     </h2>
 
+                    <!-- ==========================================================
+                         SECTION: Mode control & feature toggles
+                         (Aux winding / Snubber / C_bulk / CCM-DCM target)
+                         ========================================================== -->
                     <!-- Mode Control and Toggles -->
                     <div class="space-y-3">
                         <!-- Custom Switches (Aux Winding Option) -->
@@ -208,7 +219,9 @@ AI Instruction: Whenever any AI model edits, refactors, or updates this file,
                 </div>
             </div>
 
-            <!-- Right Visual simulation & results panel -->
+            <!-- ==================================================================
+                 SECTION: Right panel — live schematic, waveform chart & results
+                 ================================================================== -->
             <div class="lg:col-span-7 space-y-6">
                 <!-- Advanced Live Simulator Display (Stacked Layout) -->
                 <div class="bg-slate-900/70 backdrop-blur-md border border-slate-800/70 rounded-2xl p-6 shadow-xl relative overflow-hidden">
@@ -397,7 +410,9 @@ AI Instruction: Whenever any AI model edits, refactors, or updates this file,
         </div>
     </main>
 
-    <!-- Modular Script references -->
+    <!-- ==========================================================================
+         SECTION: Modular script references (frontend orchestration logic)
+         ========================================================================== -->
     <script src="/main.js"></script>
 </body>
 </html>

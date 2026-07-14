@@ -1,15 +1,17 @@
 # ==============================================================================
-# Project: Flyback Transformer Design Suite - Core Mathematics & Physics Engine
-# Version: 6.7
-# AI Instruction: Whenever any AI model edits, refactors, or updates this file,
-#                 please increment the version number above by exactly +0.1.
+#  Flyback Transformer Design Suite
+#  File     : flyback_engine.py — Core Mathematics & Physics Engine
+#  Version  : 1.0
+#  Author   : Hamed Sargoli
+#  Date     : 2026-07-14
+#  Developed with AI collaboration
 # ==============================================================================
 # Dedicated math calculations validator & offline magnetics transformer physical simulator.
 
 import math
 
 # ------------------------------------------------------------------------------
-# Practical / Off-the-shelf component helpers
+# SECTION: Practical / off-the-shelf component helpers (standard series tables)
 # These do NOT change any physical/engineering calculation above - they only
 # translate the "ideal" mathematically-computed component values into values
 # that actually exist on the market (standard resistor/capacitor decades,
@@ -76,6 +78,12 @@ def standard_wire_diameter_mm(value_mm):
             return d
     return WIRE_DIAMETERS_MM[-1]
 
+# ------------------------------------------------------------------------------
+# SECTION: Main calculation entry point
+# Dispatches to the correct topology branch (AC-DC / DC-DC / Charger), runs the
+# full magnetics + electrical + snubber design, and returns all results together
+# with their step-by-step formulas.
+# ------------------------------------------------------------------------------
 def calculate_flyback(tab, inputs):
     """
     Processes specific electrical equations based on selected application topology.
@@ -84,7 +92,10 @@ def calculate_flyback(tab, inputs):
     Also exports step-by-step formulas and calculations with live substitutions and active variables.
     """
     warnings = []
-    
+
+    # --------------------------------------------------------------------
+    # SECTION: Common input parsing (shared across all topologies)
+    # --------------------------------------------------------------------
     try:
         Vout = float(inputs.get('Vout', 12.0))
         Iout = float(inputs.get('Iout', 2.0))
@@ -113,6 +124,9 @@ def calculate_flyback(tab, inputs):
     except (ValueError, TypeError):
         return {'success': False, 'error': 'خطا در تبدیل مقادیر ورودی به عدد'}
 
+    # --------------------------------------------------------------------
+    # SECTION: Conduction-mode target normalization (Auto / CCM / DCM)
+    # --------------------------------------------------------------------
     if mode == 'ccm':
         if Kr >= 2.0 or Kr <= 0:
             Kr = 0.4
@@ -130,6 +144,9 @@ def calculate_flyback(tab, inputs):
     Vac_max = float(inputs.get('Vac_max', 265.0))
     f_line = float(inputs.get('f_line', 50.0))
 
+    # --------------------------------------------------------------------
+    # SECTION: Topology-specific input bus & power budget (Pout / Pin)
+    # --------------------------------------------------------------------
     if tab == 'acdc':
         # Offline AC-DC with bulk capacitor valley voltage analysis
         Vaux = float(inputs.get('Vaux', 15.0)) if has_aux else 0.0
@@ -194,6 +211,9 @@ def calculate_flyback(tab, inputs):
         if C_bulk < (Pout * 1.5):
             warnings.append(f"خازن محاسباتی ({C_bulk:.1f}uF) کمتر از حد توصیه شده عمومی (1.5uF/W الی 3uF/W) برای پایداری ریپل است. پیشنهاد می‌شود راندمان یا ولتاژ کمینه ورودی را مجدداً ارزیابی کنید.")
 
+    # --------------------------------------------------------------------
+    # SECTION: Transformer magnetics sizing (Lp, turns count, air gap)
+    # --------------------------------------------------------------------
     # Standardize parameters and compute essential power metrics
     if Vin_min_DC <= 0 or Dmax_target <= 0 or fsw <= 0 or Ae <= 0 or Aw <= 0:
         return {'success': False, 'error': 'مقادیر فیزیکی ورودی نامعتبر است (صفر یا منفی)'}
@@ -230,6 +250,9 @@ def calculate_flyback(tab, inputs):
     Vro_real = n_real * (Vout + Vf)
     D_real = Vro_real / (Vin_min_DC + Vro_real) if (Vin_min_DC + Vro_real) > 0 else 0.0
 
+    # --------------------------------------------------------------------
+    # SECTION: Realized CCM/DCM boundary re-verification & winding currents
+    # --------------------------------------------------------------------
     # Realized CCM/DCM Boundary Verification
     P_boundary = (Vin_min_DC**2 * D_real**2) / (2.0 * Lp * fsw) if Lp > 0 else 0.0
     is_dcm = Pin < P_boundary
@@ -256,6 +279,9 @@ def calculate_flyback(tab, inputs):
 
     B_real = (Lp * I_peak) / (Np * Ae * 1e-6) if (Np * Ae * 1e-6) > 0 else 0.0
 
+    # --------------------------------------------------------------------
+    # SECTION: RCD snubber / leakage-inductance clamp network
+    # --------------------------------------------------------------------
     # ------------------------------------------------------------------
     # RCD Snubber / Leakage Clamp network (moved up from below so its
     # result - V_clamp - is available for the MOSFET voltage stress
@@ -281,6 +307,9 @@ def calculate_flyback(tab, inputs):
     C_snub = V_snub_cap / (R_snub * fsw * delta_v_snub) if (R_snub * fsw * delta_v_snub) > 0 else 1e-9
     P_snub = snub_power_num
 
+    # --------------------------------------------------------------------
+    # SECTION: MOSFET voltage stress, RMS currents & wire sizing
+    # --------------------------------------------------------------------
     # Stress Analysis
     # When an RCD snubber is actually present, it is the clamp voltage
     # (V_clamp) that physically caps the MOSFET Vds - so the safety
@@ -312,6 +341,9 @@ def calculate_flyback(tab, inputs):
             "از مقدار DC محاسبه‌شده خواهد بود. استفاده از چند رشته سیم موازی نازک‌تر یا سیم لیتز (Litz Wire) توصیه می‌شود."
         )
 
+    # --------------------------------------------------------------------
+    # SECTION: Air gap, bobbin fill factor & MOSFET loss/safety validation
+    # --------------------------------------------------------------------
     AirGap = (4.0 * math.pi * 1e-4 * (Np**2) * Ae) / Lp_uH if Lp_uH > 0 else 0.0
     A_cu_pri = Np * (math.pi * ((D_wire_pri / 2.0)**2))
     A_cu_sec = Ns * (math.pi * ((D_wire_sec / 2.0)**2))
@@ -339,6 +371,9 @@ def calculate_flyback(tab, inputs):
             f"{(0.7 * Ids_max):.1f}A) فراتر رفته است."
         )
 
+    # --------------------------------------------------------------------
+    # SECTION: Physical safety warnings (core saturation, fill factor, duty cycle)
+    # --------------------------------------------------------------------
     # بررسی اشباع فیزیکی هسته ترانسفورماتور (پیش‌تر فقط با یک نشان کوچک در کارت نتایج نشان داده می‌شد
     # و هرگز به پنل هشدارهای اصلی نمی‌رسید؛ اکنون به‌عنوان یک خطای ترانس واقعی گزارش می‌شود)
     if B_real > Bmax:
@@ -365,6 +400,9 @@ def calculate_flyback(tab, inputs):
             "کنترلر PWM به محدودیت دیوتی سایکل خود برخورد کرده و رگولاسیون خروجی از دست برود."
         )
 
+    # --------------------------------------------------------------------
+    # SECTION: Smart charger burst-mode & auxiliary UVLO analysis
+    # --------------------------------------------------------------------
     charger_html = ""
     if tab == 'charger':
         if has_aux:
@@ -395,6 +433,9 @@ def calculate_flyback(tab, inputs):
     i_out_str = 'Icharge' if tab == 'charger' else 'Iout'
     v_aux_str = 'Vaux_nom' if tab == 'charger' else 'Vaux'
 
+    # --------------------------------------------------------------------
+    # SECTION: Step-by-step equation export (symbolic + substituted formulas)
+    # --------------------------------------------------------------------
     # Advanced Output Equation Formatter
     equations = {
         'Pin': {
@@ -657,6 +698,8 @@ def calculate_flyback(tab, inputs):
         equations.update(charger_eqs)
 
     # --------------------------------------------------------------------
+    # SECTION: Practical / off-the-shelf component values
+    # --------------------------------------------------------------------
     # Practical / Off-the-shelf values
     # The numbers above are the "ideal" mathematical results. In real builds,
     # engineers substitute the nearest standard/available component and add
@@ -728,6 +771,9 @@ def calculate_flyback(tab, inputs):
             'related_vars': ['R_dummy']
         }
 
+    # --------------------------------------------------------------------
+    # SECTION: Final structured result payload returned to the API layer
+    # --------------------------------------------------------------------
     return {
         'success': True,
         'Pout': Pout, 'Pin': Pin, 'Lp_uH': Lp_uH, 'Np': Np, 'Ns': Ns, 'Naux': Naux_turns,

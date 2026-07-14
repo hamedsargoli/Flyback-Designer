@@ -1,12 +1,16 @@
 // ==============================================================================
-// Project: Flyback Transformer Design Suite - Orchestration & Interaction Script
-// Version: 6.8
-// AI Instruction: Whenever any AI model edits, refactors, or updates this file,
-//                 please increment the version number above by exactly +0.1.
+//  Flyback Transformer Design Suite
+//  File     : main.js — Frontend Orchestration & Interaction Script
+//  Version  : 1.0
+//  Author   : Hamed Sargoli
+//  Date     : 2026-07-14
+//  Developed with AI collaboration
 // ==============================================================================
 // Frontend script coordinating user interaction, asynchronous backend calculations, and waveform rendering.
 
-// Tab Configurations
+// ------------------------------------------------------------------------------
+// SECTION: Tab configurations (per-topology input field definitions)
+// ------------------------------------------------------------------------------
 const tabConfigs = {
     acdc: {
         title: "مبدل AC-DC ولتاژ بالا (High-Voltage Offline)",
@@ -105,6 +109,9 @@ const tabConfigs = {
     }
 };
 
+// ------------------------------------------------------------------------------
+// SECTION: Standard ferrite core library (Ae/Aw quick-select presets)
+// ------------------------------------------------------------------------------
 const coreData = {
     custom: { ae: '', aw: '' },
     EE13: { ae: 17.1, aw: 14.5 },
@@ -135,6 +142,9 @@ const coreData = {
 };
 
 let currentTab = 'acdc';
+// ------------------------------------------------------------------------------
+// SECTION: Global state & shared UI utility helpers
+// ------------------------------------------------------------------------------
 window.lastCalculationResults = null;
 
 // Highlight and focus an input or scroll and shake/pulse an output card with cyan glow
@@ -167,6 +177,9 @@ window.highlightAndFocusInput = function(id) {
     }
 };
 
+// ------------------------------------------------------------------------------
+// SECTION: Tab switching & UI mode control
+// ------------------------------------------------------------------------------
 function switchTab(tabName) {
     currentTab = tabName;
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -201,6 +214,9 @@ function switchTab(tabName) {
     fetchCalculations();
 }
 
+// ------------------------------------------------------------------------------
+// SECTION: Input toggle handlers (ferrite core, Aux winding, snubber, C_bulk)
+// ------------------------------------------------------------------------------
 function handleCoreSelect() {
     const coreSelector = document.getElementById('core-selector');
     if (!coreSelector) return;
@@ -275,6 +291,9 @@ window.toggleCBulkWinding = function() {
     }
 }
 
+// ------------------------------------------------------------------------------
+// SECTION: Dynamic, grouped input form rendering
+// ------------------------------------------------------------------------------
 function renderInputsGrouped(inputs) {
     const groupElectrical = document.getElementById('group-electrical');
     const groupMagnetics = document.getElementById('group-magnetics');
@@ -350,6 +369,9 @@ function renderInputsGrouped(inputs) {
     window.toggleCBulkWinding();
 }
 
+// ------------------------------------------------------------------------------
+// SECTION: Backend API communication (/api/calculate)
+// ------------------------------------------------------------------------------
 function fetchCalculations() {
     const inputsData = {};
     const config = tabConfigs[currentTab];
@@ -388,6 +410,9 @@ function fetchCalculations() {
 
 // توضیح کوتاه هر پارامتر خروجی، دقیقاً با همان سبک راهنمای مقادیر ورودی (آیکون ⓘ با تولتیپ روی هاور)
 // تا کاربر با نگه‌داشتن نشانگر روی هر خروجی، بفهمد آن مقدار دقیقاً چه چیزی را نشان می‌دهد.
+// ------------------------------------------------------------------------------
+// SECTION: Output tooltips & practical/standard-value badge builders
+// ------------------------------------------------------------------------------
 const OUTPUT_TOOLTIPS = {
     C_bulk: 'Calculated raw value of the input rectifier filter capacitor, sized from the mains ripple equation.\nسرچ جهت اطلاعات بیشتر: Bulk capacitor ripple sizing',
     Pin: 'Total input power drawn from the DC bus, including losses through the target efficiency.\nسرچ جهت اطلاعات بیشتر: Flyback input power Pin',
@@ -469,6 +494,9 @@ function createPracticalBadgeHTML(res, key) {
 }
 
 // Interactive Click-to-Open Modal System for Perfect UI Control
+// ------------------------------------------------------------------------------
+// SECTION: Step-by-step engineering formula modal (KaTeX)
+// ------------------------------------------------------------------------------
 window.openMathModal = function(key) {
     if (!window.lastCalculationResults) return;
     const eq = window.lastCalculationResults.equations && window.lastCalculationResults.equations[key];
@@ -643,6 +671,9 @@ window.switchMathModal = function(key) {
     }, 100);
 };
 
+// ------------------------------------------------------------------------------
+// SECTION: Calculation results rendering (cards, warnings, schematic trigger)
+// ------------------------------------------------------------------------------
 function updateUI(res) {
     const warningsPanel = document.getElementById('safety-warnings');
     const warningsList = document.getElementById('warnings-list');
@@ -887,6 +918,9 @@ function updateUI(res) {
 // part can't safely handle it - turns the card red, prints why, and draws
 // a red X directly over the MOSFET symbol so the problem is impossible to
 // miss, not just a line in the warnings list.
+// ------------------------------------------------------------------------------
+// SECTION: Live schematic data binding (spec cards on the SVG circuit)
+// ------------------------------------------------------------------------------
 function updateSchematicValues(res) {
     const setText = (id, text) => {
         const el = document.getElementById(id);
@@ -972,6 +1006,9 @@ function updateSchematicValues(res) {
     });
 }
 
+// ------------------------------------------------------------------------------
+// SECTION: Schematic current-flow animation (duty-cycle driven)
+// ------------------------------------------------------------------------------
 function updateSchematicInteractive(dutyCycle, hasSnubber) {
     const priWinding = document.getElementById('pri-winding');
     const secWinding = document.getElementById('sec-winding');
@@ -1041,6 +1078,9 @@ function updateSchematicInteractive(dutyCycle, hasSnubber) {
 
 // Builds the trapezoidal primary/secondary current points (in data-space, not pixels)
 // for a single switching cycle starting at t0, spanning cycleW.
+// ------------------------------------------------------------------------------
+// SECTION: Live waveform chart rendering (I_pri / I_sec, CCM & DCM)
+// ------------------------------------------------------------------------------
 function buildWaveformCyclePoints(t0, cycleW, isDCM, D_pri, D_sec, I_peak_pri, I_valley_pri, I_peak_sec, I_valley_sec) {
     const tOnEnd = t0 + (D_pri * cycleW);
     const tOffEnd = tOnEnd + (D_sec * cycleW);
@@ -1179,6 +1219,9 @@ function drawWaveforms(isDCM, D_pri, D_sec, I_peak_pri, I_valley_pri, I_peak_sec
 }
 
 // Initial Booting Sequence
+// ------------------------------------------------------------------------------
+// SECTION: App bootstrap & lifecycle (startup, graceful server shutdown)
+// ------------------------------------------------------------------------------
 window.onload = function() {
     switchTab('acdc');
 }
