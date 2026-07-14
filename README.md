@@ -100,16 +100,16 @@ Every output parameter is returned together with its symbolic LaTeX formula, pla
 ## 🖼️ Application Screenshots
 
 **High-Voltage AC-DC tab — live schematic, spec cards, and waveform chart:**
-![AC-DC schematic view](pic/1.png)
+![AC-DC schematic view](PIC/1.png)
 
 **Base power/inductance calculations and the RCD snubber network:**
-![Base and snubber calculations](pic/2.png)
+![Base and snubber calculations](PIC/2.png)
 
 **Winding turns table, RMS/wire-diameter analysis, and core physical validation:**
-![Windings and physical validation](pic/3.png)
+![Windings and physical validation](PIC/3.png)
 
 **Automatic skin-effect warning with a Litz wire recommendation:**
-![Skin effect warning](pic/4.png)
+![Skin effect warning](PIC/4.png)
 
 ---
 
