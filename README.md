@@ -2,6 +2,8 @@
 
 An engineering web tool for the physical and electrical design of offline flyback transformers, built on an independent Python physics/calculation engine with an interactive web front end.
 
+![AC-DC schematic view](PIC/1.png)
+
 ---
 
 ## ⚙️ Supported Topologies
@@ -100,15 +102,19 @@ Every output parameter is returned together with its symbolic LaTeX formula, pla
 ## 🖼️ Application Screenshots
 
 **High-Voltage AC-DC tab — live schematic, spec cards, and waveform chart:**
+
 ![AC-DC schematic view](PIC/1.png)
 
 **Base power/inductance calculations and the RCD snubber network:**
+
 ![Base and snubber calculations](PIC/2.png)
 
 **Winding turns table, RMS/wire-diameter analysis, and core physical validation:**
+
 ![Windings and physical validation](PIC/3.png)
 
 **Automatic skin-effect warning with a Litz wire recommendation:**
+
 ![Skin effect warning](PIC/4.png)
 
 ---
