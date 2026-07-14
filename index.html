@@ -1,0 +1,403 @@
+<!--
+==============================================================================
+Project: Flyback Transformer Design Suite UI - Main HTML Portal
+Version: 5.9
+AI Instruction: Whenever any AI model edits, refactors, or updates this file,
+                please increment the version number above by exactly +0.1.
+==============================================================================
+-->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسبات پیشرفته ترانس فلای‌بک</title>
+    <!-- Tailwind CSS -->
+    <script src="/static/js/tailwind.js"></script>
+    
+    <!-- KaTeX CDN for High-Fidelity Textbook Math Rendering -->
+    <link rel="stylesheet" href="/static/css/katex.min.css">
+    <script src="/static/js/katex.min.js"></script>
+    <!-- Modular Custom CSS stylesheet -->
+    <link rel="stylesheet" href="/custom.css">
+</head>
+<body class="text-slate-200 min-h-screen">
+
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-tr from-blue-600 to-blue-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-white flex items-center gap-2">
+                        پروژه محاسباتی ماژولار ترانس فلای‌بک
+                        <span class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full font-medium">نسخه ۵.۸</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 font-medium">اتصال وب متصل به هسته فیزیکی پایتون با مانیتورینگ زنده جریان و مدار اسنابر</p>
+                </div>
+            </div>
+            
+            <!-- Tab Controls -->
+            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+                <button onclick="switchTab('acdc')" id="tab-acdc" class="tab-btn active px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200">
+                    مبدل AC-DC ولتاژ بالا
+                </button>
+                <button onclick="switchTab('dcdc')" id="tab-dcdc" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200">
+                    مبدل DC-DC صنعتی
+                </button>
+                <button onclick="switchTab('charger')" id="tab-charger" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200">
+                    شارژر هوشمند باتری
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left inputs panel -->
+            <div class="lg:col-span-5 space-y-6">
+                <div id="tab-intro" class="p-4 rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xs leading-relaxed text-right">
+                    <!-- Dynamic introduction text injected here -->
+                </div>
+
+                <!-- Structured & Categorized Form Inputs -->
+                <div class="bg-slate-900/70 backdrop-blur-md border border-slate-800/70 rounded-2xl p-6 shadow-xl space-y-6 text-right">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-3">
+                        <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+                        پارامترهای فنی ورودی
+                    </h2>
+
+                    <!-- Mode Control and Toggles -->
+                    <div class="space-y-3">
+                        <!-- Custom Switches (Aux Winding Option) -->
+                        <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800 flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-200">طراحی با سیم‌پیچ کمکی (Aux Winding)</span>
+                                <span class="text-[10px] text-slate-500">تامین تغذیه کنترلر به صورت خودگردان</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="has-aux-checkbox" class="sr-only peer" checked onchange="toggleAuxWinding()">
+                                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- Custom Switches (Snubber Circuit Option) -->
+                        <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800 flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-200">طراحی با مدار اسنابر (Snubber Circuit)</span>
+                                <span class="text-[10px] text-slate-500">جهت مهار اسپایک‌های ولتاژ نشتی ترانسفورماتور</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="has-snubber-checkbox" class="sr-only peer" checked onchange="toggleSnubberCircuit()">
+                                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- Custom Switches (Bulk Capacitor Option) -->
+                        <div id="cbulk-toggle-wrapper" class="p-3 rounded-xl bg-slate-950/50 border border-slate-800 flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-200">نمایش خازن صافی ورودی (C_bulk)</span>
+                                <span class="text-[10px] text-slate-500">شبیه‌سازی و مانیتورینگ خازن لینک DC ورودی</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="has-cbulk-checkbox" class="sr-only peer" checked onchange="toggleCBulkWinding()">
+                                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- Operating Mode Target Selector -->
+                        <div class="p-3 rounded-xl bg-slate-950/50 border border-slate-800 flex items-center justify-between gap-4">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-200">حالت هدایت هدف (CCM / DCM)</span>
+                                <span class="text-[10px] text-slate-500">تعیین خودکار چگالی جریان و بازه ریپل</span>
+                            </div>
+                            <select id="mode-selector" onchange="fetchCalculations()" class="bg-slate-900 text-slate-200 text-xs rounded-lg border border-slate-700 py-1.5 px-3 focus:border-blue-500 focus:outline-none text-center font-semibold">
+                                <option value="auto" selected>خودکار (بر اساس Kr)</option>
+                                <option value="ccm">پیوسته اجباری (CCM)</option>
+                                <option value="dcm">ناپیوسته اجباری (DCM)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Group 1: Electrical Specs -->
+                    <div class="space-y-4">
+                        <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                            ۱. پارامترهای الکتریکی اصلی (Electrical Specifications)
+                        </h3>
+                        <div id="group-electrical" class="space-y-3 pl-1">
+                            <!-- Dynamic Electrical Inputs -->
+                        </div>
+                    </div>
+
+                    <!-- Group 2: Ferrite Core Specs -->
+                    <div class="space-y-4 border-t border-slate-800/80 pt-4">
+                        <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                            ۲. هسته فریت و مغناطیسی (Magnetic Ferrite Core)
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center mb-3">
+                            <div class="sm:col-span-8 flex items-center justify-between">
+                                <label class="text-xs text-slate-300 font-semibold">انتخاب مدل هسته فریت استاندارد</label>
+                            </div>
+                            <div class="sm:col-span-4">
+                                <select id="core-selector" onchange="handleCoreSelect()" class="w-full bg-slate-950 text-slate-200 text-xs rounded-lg border border-slate-700 py-1.5 px-2 focus:border-blue-500 focus:outline-none text-center">
+                                    <option value="custom">تنظیم دستی (Custom)</option>
+                                    <optgroup label="هسته‌های سری EE">
+                                        <option value="EE13">EE13 (Ae=17.1, Aw=14.5)</option>
+                                        <option value="EE16">EE16 (Ae=19.3, Aw=22.0)</option>
+                                        <option value="EE19">EE19 (Ae=22.8, Aw=28.0)</option>
+                                        <option value="EE22">EE22 (Ae=42.0, Aw=33.0)</option>
+                                        <option value="EE25">EE25 (Ae=41.0, Aw=39.5)</option>
+                                        <option value="EE30">EE30 (Ae=109.0, Aw=80.0)</option>
+                                        <option value="EE33">EE33 (Ae=118.0, Aw=112.0)</option>
+                                        <option value="EE35">EE35 (Ae=103.0, Aw=122.0)</option>
+                                        <option value="EE40">EE40 (Ae=127.0, Aw=154.0)</option>
+                                        <option value="EE42">EE42 (Ae=181.0, Aw=176.0)</option>
+                                        <option value="EE55">EE55 (Ae=354.0, Aw=250.0)</option>
+                                    </optgroup>
+                                    <optgroup label="هسته‌های سری EFD">
+                                        <option value="EFD15">EFD15 (Ae=15.0, Aw=18.5)</option>
+                                        <option value="EFD20">EFD20 (Ae=31.0, Aw=29.0)</option>
+                                        <option value="EFD25">EFD25 (Ae=58.0, Aw=46.0)</option>
+                                        <option value="EFD30">EFD30 (Ae=69.0, Aw=57.0)</option>
+                                    </optgroup>
+                                    <optgroup label="هسته‌های سری PQ">
+                                        <option value="PQ2016">PQ20/16 (Ae=62.0, Aw=28.0)</option>
+                                        <option value="PQ2020">PQ20/20 (Ae=62.0, Aw=41.0)</option>
+                                        <option value="PQ2620">PQ26/20 (Ae=118.0, Aw=65.0)</option>
+                                        <option value="PQ2625" selected>PQ26/25 (Ae=118.0, Aw=85.0)</option>
+                                        <option value="PQ3220">PQ32/20 (Ae=153.0, Aw=81.0)</option>
+                                        <option value="PQ3230">PQ32/30 (Ae=153.0, Aw=120.0)</option>
+                                    </optgroup>
+                                    <optgroup label="هسته‌های سری RM">
+                                        <option value="RM6">RM6 (Ae=37.0, Aw=24.0)</option>
+                                        <option value="RM8">RM8 (Ae=64.0, Aw=38.0)</option>
+                                        <option value="RM10">RM10 (Ae=98.0, Aw=51.0)</option>
+                                        <option value="RM12">RM12 (Ae=146.0, Aw=73.0)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="group-magnetics" class="space-y-3 pl-1">
+                            <!-- Dynamic Magnetic Inputs -->
+                        </div>
+                    </div>
+
+                    <!-- Group 3: Power Switch (MOSFET) -->
+                    <div class="space-y-4 border-t border-slate-800/80 pt-4">
+                        <h3 class="text-xs font-bold text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-orange-400 rounded-full"></span>
+                            ۳. مشخصات سوئیچ قدرت (MOSFET Switch Specifications)
+                        </h3>
+                        <div id="group-mosfet" class="space-y-3 pl-1">
+                            <!-- Dynamic MOSFET Inputs -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warnings board -->
+                <div id="safety-warnings" class="hidden p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-300 text-xs leading-relaxed space-y-2 text-right">
+                    <h3 class="font-bold flex items-center gap-2 text-sm text-red-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        کنترل ایمنی و هشدارهای فیزیکی:
+                    </h3>
+                    <ul id="warnings-list" class="list-disc list-inside space-y-1 mr-2"></ul>
+                </div>
+            </div>
+
+            <!-- Right Visual simulation & results panel -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Advanced Live Simulator Display (Stacked Layout) -->
+                <div class="bg-slate-900/70 backdrop-blur-md border border-slate-800/70 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-3">
+                        <h3 class="text-sm font-bold text-slate-300 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-blue-400 rounded-full animate-ping"></span>
+                            سیستم مانیتورینگ زنده جریان ترانسفورماتور و مدار اسنابر
+                        </h3>
+                        <div id="live-mode-badge" class="px-3 py-1 rounded-full text-xs font-bold font-mono"></div>
+                    </div>
+
+                    <!-- Stacked items vertically for complete and un-cropped preview -->
+                    <div class="flex flex-col gap-6">
+                        <!-- High Fidelity Schematic SVG with Snubber circuit -->
+                        <div class="bg-slate-950 rounded-xl p-5 border border-slate-800/80 flex flex-col items-center relative w-full">
+                            <span class="text-[10px] text-slate-500 mb-4 font-mono tracking-widest text-center">انتقال انرژی و کلیدزنی اسنابر (RCD Snubber Active)</span>
+                            
+                            <!-- Interactive State Panel -->
+                            <div class="flex gap-4 mb-4 w-full justify-center px-2 text-xs font-mono">
+                                <div id="state-on-indicator" class="flex items-center gap-2 text-blue-400 transition-all">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                    <span>تونل انرژی (Ton)</span>
+                                </div>
+                                <div id="state-off-indicator" class="flex items-center gap-2 text-emerald-400 transition-all opacity-40">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                                    <span>تخلیه ثانویه و اسنابر کلمپ (Toff / Clamp)</span>
+                                </div>
+                            </div>
+
+                            <!-- ADVANCED SVG: Wide Schematic View with Perfect Text Alignment (viewBox adjusted to accommodate bulk cap on the far left) -->
+                            <svg id="schematic-svg" class="w-full max-w-lg h-auto text-slate-400" viewBox="-80 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" direction="ltr">
+                                <!-- Core Structure background -->
+                                <rect id="core-glow" x="95" y="15" width="50" height="100" rx="4" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" class="transition-all duration-300"/>
+                                <rect x="107" y="5" width="26" height="120" rx="3" fill="#0f172a" stroke="#64748b" stroke-width="2"/>
+
+                                <!-- Primary Winding -->
+                                <path id="pri-winding" d="M 60 25 C 60 25, 72 30, 60 35 C 48 40, 72 45, 60 50 C 48 55, 72 60, 60 65 C 48 70, 72 75, 60 80 C 48 85, 72 90, 60 95" stroke="#3b82f6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="transition-all duration-200"/>
+                                
+                                <!-- Secondary Winding -->
+                                <path id="sec-winding" d="M 180 25 C 180 25, 168 30, 180 35 C 192 40, 168 45, 180 50 C 192 55, 168 60, 180 65 C 192 70, 168 75, 180 80 C 192 85, 168 90, 180 95" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="transition-all duration-200"/>
+                                
+                                <!-- Air Gap Indicator in the Core -->
+                                <line x1="107" y1="65" x2="133" y2="65" stroke="#38bdf8" stroke-width="3" id="air-gap-glow" class="transition-all duration-200"/>
+                                <text x="120" y="60" fill="#94a3b8" font-size="7" font-weight="bold" text-anchor="middle">AIR GAP</text>
+
+                                <!-- MOSFET Switch -->
+                                <rect id="mosfet-box" x="45" y="102" width="30" height="15" rx="3" fill="#1e1b4b" stroke="#3b82f6" stroke-width="1.5"/>
+                                <text x="60" y="112" fill="#60a5fa" font-size="7" text-anchor="middle" font-weight="bold">MOSFET</text>
+                                <line x1="60" y1="95" x2="60" y2="102" stroke="#3b82f6" stroke-width="1.5"/>
+
+                                <!-- MOSFET failure mark: hidden by default, shown by
+                                     updateSchematicValues() in main.js when the selected
+                                     MOSFET can't safely handle the calculated V/I stress. -->
+                                <g id="mosfet-fail-mark" class="hidden">
+                                    <line x1="47" y1="104" x2="73" y2="115" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(244,63,94,0.9))"/>
+                                    <line x1="73" y1="104" x2="47" y2="115" stroke="#f43f5e" stroke-width="2.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(244,63,94,0.9))"/>
+                                </g>
+
+                                <!-- --- INPUT BULK CAPACITOR (C_bulk) (Moved further left for better spacing) --- -->
+                                <g id="c-bulk-svg-group" class="transition-all duration-300">
+                                    <!-- Connection from snubber input (x=-10) further left to bulk cap (x=-60) -->
+                                    <path d="M -10 25 L -60 25" stroke="#64748b" stroke-width="1.2"/>
+                                    <!-- Capacitor Plates Symbol -->
+                                    <line x1="-60" y1="25" x2="-60" y2="48" stroke="#64748b" stroke-width="1.2"/>
+                                    <line x1="-68" y1="48" x2="-52" y2="48" stroke="#0ea5e9" stroke-width="2"/>
+                                    <line x1="-68" y1="52" x2="-52" y2="52" stroke="#0ea5e9" stroke-width="2"/>
+                                    <line x1="-60" y1="52" x2="-60" y2="117" stroke="#64748b" stroke-width="1.2"/>
+                                    <!-- Link back to ground line (y=117) -->
+                                    <path d="M -60 117 L 45 117" stroke="#64748b" stroke-width="1.2" stroke-dasharray="3 3"/>
+                                    <!-- Name on the right of the capacitor plates, same column -->
+                                    <text x="-46" y="52" fill="#0ea5e9" font-size="7" font-weight="bold" text-anchor="start">C_bulk</text>
+                                </g>
+
+                                <!-- --- RCD SNUBBER CIRCUIT (Perfected Layout, Wide spacing, No Overlap) --- -->
+                                <g id="snubber-svg-group" class="transition-all duration-300">
+                                    <!-- Positive DC Rail Link to Snubber Top Winding Junction (Wider) -->
+                                    <path d="M 60 25 L 15 25" stroke="#64748b" stroke-width="1.2" stroke-dasharray="2 2"/>
+                                    
+                                    <!-- Parallel Resistor and Capacitor branches (Re-spaced from x=15) -->
+                                    <line x1="15" y1="25" x2="-10" y2="25" stroke="#64748b" stroke-width="1.2"/>
+                                    <line x1="15" y1="25" x2="35" y2="25" stroke="#64748b" stroke-width="1.2"/>
+                                    
+                                    <!-- Resistor R_snub (Left Branch at x=-10, completely clear) -->
+                                    <path d="M -10 25 L -10 35 L -13 37 L -7 41 L -13 43 L -7 47 L -13 49 L -10 51 L -10 60" stroke="#f59e0b" stroke-width="1.2"/>
+                                    <!-- Fixed overlap: Placed text on the left (x=-18) aligned to end -->
+                                    <text x="-18" y="45" fill="#f59e0b" font-size="7" text-anchor="end" font-weight="bold">R_snub</text>
+                                    
+                                    <!-- Capacitor C_snub (Right Branch at x=35, completely clear) -->
+                                    <line x1="35" y1="25" x2="35" y2="35" stroke="#64748b" stroke-width="1.2"/>
+                                    <line x1="29" y1="35" x2="41" y2="35" stroke="#38bdf8" stroke-width="1.5"/>
+                                    <line x1="29" y1="38" x2="41" y2="38" stroke="#38bdf8" stroke-width="1.5"/>
+                                    <line x1="35" y1="38" x2="35" y2="60" stroke="#64748b" stroke-width="1.2"/>
+                                    <text x="24" y="40" fill="#38bdf8" font-size="7" font-weight="bold" text-anchor="end">C_snub</text>
+                                    
+                                    <!-- Rejoin branch lines below parallel network -->
+                                    <line x1="-10" y1="60" x2="35" y2="60" stroke="#64748b" stroke-width="1.2"/>
+                                    <line x1="15" y1="60" x2="15" y2="70" stroke="#64748b" stroke-width="1.2"/>
+                                    
+                                    <!-- Snubber Diode (Anode at bottom/drain, Cathode at top/junction pointing UP, centered at x=15) -->
+                                    <polygon id="snub-diode" points="10,80 20,80 15,70" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2"/>
+                                    <line x1="10" y1="70" x2="20" y2="70" stroke="#38bdf8" stroke-width="1.5"/>
+                                    <line x1="15" y1="80" x2="15" y2="98" stroke="#64748b" stroke-width="1.2"/>
+                                    <line x1="15" y1="98" x2="60" y2="98" stroke="#64748b" stroke-width="1.2"/>
+                                    
+                                    <!-- Pulse Energy Flow to Snubber (Glowing animation on Toff - matched with x=15 and x=-10) -->
+                                    <circle id="flow-dot-snub" r="2.5" fill="#f59e0b" class="hidden">
+                                        <animateMotion dur="0.6s" repeatCount="indefinite" path="M 60 98 L 15 98 L 15 80 L 15 70 L 15 60 L -10 60 L -10 25 L 15 25 L 60 25"/>
+                                    </circle>
+                                </g>
+
+                                <!-- Secondary Diode -->
+                                <line x1="180" y1="25" x2="200" y2="25" stroke="#10b981" stroke-width="1.5"/>
+                                <polygon id="diode-icon" points="200,20 200,30 212,25" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+                                <line x1="212" y1="20" x2="212" y2="30" stroke="#10b981" stroke-width="2"/>
+                                <line x1="212" y1="25" x2="225" y2="25" stroke="#10b981" stroke-width="1.5"/>
+
+                                <!-- Animated Glowing Flux Dots -->
+                                <circle id="flow-dot-pri" r="3.5" fill="#60a5fa" class="hidden shadow-lg">
+                                    <animateMotion dur="0.8s" repeatCount="indefinite" path="M 60 25 Q 70 45 60 65 T 60 95 L 60 102"/>
+                                </circle>
+                                <circle id="flow-dot-sec" r="3.5" fill="#34d399" class="hidden">
+                                    <animateMotion dur="1s" repeatCount="indefinite" path="M 180 95 Q 170 75 180 55 T 180 25 L 205 25"/>
+                                </circle>
+
+                                <!-- Label Texts -->
+                                <text x="40" y="18" fill="#60a5fa" font-size="9" font-weight="bold">Primary (Np)</text>
+                                <text x="200" y="18" fill="#34d399" font-size="9" font-weight="bold">Secondary</text>
+
+                                <!-- ==================================================================
+                                     LIVE SPEC PANEL - three cards with generous spacing, populated by
+                                     updateSchematicValues() in main.js on every calculation. Sits in
+                                     open space below the circuit so nothing overlaps the schematic
+                                     itself or the small in-circuit component labels.
+                                     ================================================================== -->
+                                <line x1="-80" y1="136" x2="240" y2="136" stroke="#1e293b" stroke-width="1"/>
+
+                                <!-- Card A: Transformer / Core -->
+                                <g id="panel-card-transformer" class="schematic-value-chip">
+                                    <rect x="-78" y="146" width="96" height="90" rx="5" fill="#0f172a" stroke="#0ea5e9" stroke-width="1"/>
+                                    <text x="-30" y="159" fill="#38bdf8" font-size="8" font-weight="bold" text-anchor="middle">TRANSFORMER</text>
+                                    <line x1="-72" y1="164" x2="12" y2="164" stroke="#1e293b" stroke-width="1"/>
+                                    <text id="lbl-lp" x="-72" y="177" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">Lp: -- µH</text>
+                                    <text id="lbl-turns" x="-72" y="192" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">Np:Ns --:--</text>
+                                    <text id="lbl-airgap" x="-72" y="207" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">Air Gap: -- mm</text>
+                                    <text id="lbl-bflux" x="-72" y="222" fill="#e2e8f0" font-size="7.5" font-weight="bold" class="schematic-value-text">B: -- T</text>
+                                </g>
+
+                                <!-- Card B: MOSFET - stroke/status text recolor red on safety failure -->
+                                <g id="panel-card-mosfet" class="schematic-value-chip">
+                                    <rect id="mosfet-card-rect" x="28" y="146" width="96" height="90" rx="5" fill="#0f172a" stroke="#818cf8" stroke-width="1"/>
+                                    <text x="76" y="159" fill="#a5b4fc" font-size="8" font-weight="bold" text-anchor="middle">MOSFET</text>
+                                    <line x1="34" y1="164" x2="118" y2="164" stroke="#1e293b" stroke-width="1"/>
+                                    <text id="lbl-vstress" x="34" y="177" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">Vds: -- / -- V</text>
+                                    <text id="lbl-ipeak-mosfet" x="34" y="192" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">Ipk: -- / -- A</text>
+                                    <text id="lbl-ploss" x="34" y="207" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">Ploss: -- W</text>
+                                    <text id="lbl-mosfet-status" x="34" y="222" fill="#6ee7b7" font-size="7.5" font-weight="bold" class="schematic-value-text">-- </text>
+                                </g>
+
+                                <!-- Card C: Snubber / Input -->
+                                <g id="panel-card-snubber" class="schematic-value-chip">
+                                    <rect x="134" y="146" width="96" height="90" rx="5" fill="#0f172a" stroke="#f59e0b" stroke-width="1"/>
+                                    <text x="182" y="159" fill="#fbbf24" font-size="8" font-weight="bold" text-anchor="middle">SNUBBER / INPUT</text>
+                                    <line x1="140" y1="164" x2="224" y2="164" stroke="#1e293b" stroke-width="1"/>
+                                    <text id="lbl-rsnub-val" x="140" y="177" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">R_snub: --</text>
+                                    <text id="lbl-csnub-val" x="140" y="192" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">C_snub: --</text>
+                                    <text id="lbl-psnub-val" x="140" y="207" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">P_snub: -- W</text>
+                                    <text id="lbl-cbulk-val" x="140" y="222" fill="#e2e8f0" font-size="7.5" class="schematic-value-text">C_bulk: --</text>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Real-time Waveform Chart (responsive inline SVG, replaces the old fixed-height canvas) -->
+                        <div class="bg-slate-950 rounded-xl p-5 border border-slate-800/80 flex flex-col items-center w-full">
+                            <span class="text-[10px] text-slate-500 mb-4 font-mono tracking-widest">WAVEFORMS (I_pri & I_sec)</span>
+                            <div id="waveform-plot" class="w-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Calculation Results -->
+                <div id="results-wrapper" class="space-y-4 text-right">
+                    <!-- Cards will be dynamically injected here -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modular Script references -->
+    <script src="/main.js"></script>
+</body>
+</html>

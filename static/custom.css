@@ -1,0 +1,201 @@
+/* Custom CSS styling stylesheet for Flyback Design Web UI */
+
+body {
+background-color: #0b0f19;
+font-family: 'Vazirmatn', sans-serif;
+}
+
+.mono {
+font-family: 'Fira Code', monospace;
+}
+
+/* Tooltip structures for inputs description */
+.tooltip-container {
+position: relative;
+display: inline-flex;
+align-items: center;
+}
+
+.tooltip-trigger::after {
+content: " ⓘ";
+color: #38bdf8;
+font-size: 0.8rem;
+cursor: help;
+margin-right: 4px;
+display: inline-block;
+transition: transform 0.2s;
+}
+
+.tooltip-trigger:hover::after {
+transform: scale(1.2);
+}
+
+.custom-tooltip {
+visibility: hidden;
+opacity: 0;
+position: absolute;
+bottom: 125%;
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+background-color: #1e293b;
+color: #f1f5f9;
+text-align: right;
+border-radius: 0.5rem;
+padding: 0.75rem 1rem;
+width: 280px;
+box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+border: 1px solid #475569;
+z-index: 50;
+transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+pointer-events: none;
+line-height: 1.6;
+font-size: 0.8rem;
+}
+
+.tooltip-container:hover .custom-tooltip {
+visibility: visible;
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+
+/* Form inputs & interactive components */
+.tab-btn {
+color: #94a3b8;
+border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+background-color: #1e293b;
+color: #38bdf8;
+border-bottom: 2px solid #38bdf8;
+}
+
+.input-field {
+background-color: #111827;
+border: 1px solid #374151;
+color: #f3f4f6;
+font-family: 'Fira Code', monospace;
+text-align: left;
+direction: ltr;
+}
+
+.input-field:focus {
+border-color: #38bdf8;
+box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+outline: none;
+}
+
+/* Custom scrollbars styling */
+::-webkit-scrollbar {
+width: 8px;
+height: 8px; /* Added for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+background: #0f172a;
+border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+background: #334155;
+border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: #475569;
+}
+
+code::-webkit-scrollbar-track {
+background: transparent;
+}
+
+/* Advanced Modal transitions (Smooth sliding & fading) */
+.modal-backdrop {
+animation: fadeIn 0.25s ease-out forwards;
+}
+
+.modal-content {
+animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+
+@keyframes slideUp {
+from {
+opacity: 0;
+transform: translateY(24px) scale(0.98);
+}
+to {
+opacity: 1;
+transform: translateY(0) scale(1);
+}
+}
+
+/* Mathematical formulas alignment rules (Left to Right) */
+.ltr-formula {
+direction: ltr !important;
+text-align: left !important;
+}
+
+/* Responsive Formula Container for Large/Readable KaTeX */
+.formula-container {
+font-size: 1.25rem; /* Larger font size on mobile */
+overflow-x: auto;
+overflow-y: hidden;
+max-width: 100%;
+-webkit-overflow-scrolling: touch;
+padding: 0.5rem 1rem;
+scrollbar-width: thin;
+scrollbar-color: #475569 #0f172a;
+}
+
+.formula-container .katex-display {
+margin: 0.5rem 0 !important;
+overflow-x: auto;
+overflow-y: hidden;
+}
+
+@media (min-width: 640px) {
+.formula-container {
+font-size: 1.5rem; /* Even larger font size on desktop screens */
+}
+}
+
+/* Highly-optimized pulsating border-glow keyframe animation for responsive debugging visualization */
+@keyframes turquoisePulse {
+0%, 100% {
+box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.4), 0 0 20px rgba(6, 182, 212, 0.2);
+border-color: rgba(6, 182, 212, 0.8);
+}
+50% {
+box-shadow: 0 0 0 6px rgba(6, 182, 212, 0.7), 0 0 35px rgba(6, 182, 212, 0.5);
+border-color: rgba(6, 182, 212, 1);
+transform: scale(1.03);
+}
+}
+
+.turquoise-pulse-active {
+animation: turquoisePulse 0.8s ease-in-out 2;
+border-color: rgba(6, 182, 212, 0.8) !important;
+transition: all 0.3s ease;
+}
+
+/* Data-bound schematic value chips (Lp, turns ratio, Vds stress, flux
+density) on the circuit SVG. Re-triggered from JS on every fresh
+calculation result to give the schematic a "live" feel. */
+@keyframes schematicValuePulse {
+0% { opacity: 0.5; }
+40% { opacity: 1; filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.85)); }
+100% { opacity: 1; filter: none; }
+}
+
+.schematic-value-chip {
+animation: schematicValuePulse 0.6s ease-out;
+}
+
+.schematic-value-text {
+font-family: 'Fira Code', monospace;
+}
