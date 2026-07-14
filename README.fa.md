@@ -100,16 +100,16 @@
 ## 🖼️ تصاویری از محیط برنامه
 
 **تب AC-DC ولتاژ بالا — شماتیک زنده، پنل مشخصات و نمودار شکل موج:**
-![AC-DC schematic view](pic/1.png)
+![AC-DC schematic view](PIC/1.png)
 
 **محاسبات پایه توان/اندوکتانس و شبکه اسنابر RCD:**
-![Base and snubber calculations](pic/2.png)
+![Base and snubber calculations](PIC/2.png)
 
 **جدول دور سیم‌پیچ‌ها، تحلیل RMS/قطر سیم و اعتبارسنجی فیزیکی هسته:**
-![Windings and physical validation](pic/3.png)
+![Windings and physical validation](PIC/3.png)
 
 **هشدار خودکار اثر پوستی و توصیه سیم لیتز:**
-![Skin effect warning](pic/4.png)
+![Skin effect warning](PIC/4.png)
 
 ---
 
